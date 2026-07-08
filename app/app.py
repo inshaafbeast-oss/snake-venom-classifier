@@ -8,14 +8,15 @@ import os
 st.set_page_config(page_title="Venomous Snake Identifier", page_icon="🐍")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, 'efficientnet_b0.keras')
+MODEL_PATH = os.path.join(BASE_DIR, 'efficientnet_savedmodel')
 
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model(MODEL_PATH)
-    return model
+    loaded = tf.saved_model.load(MODEL_PATH)
+    infer = loaded.signatures['serving_default']
+    return infer
 
-model = load_model()
+infer = load_model()
 
 st.title("🐍 Venomous vs Non-Venomous Snake Identifier")
 st.write("Upload a photo of a snake and the model will predict whether it's venomous or non-venomous.")
@@ -30,11 +31,12 @@ if uploaded_file is not None:
 
     img_resized = img.resize((224, 224))
     img_array = image.img_to_array(img_resized)
-    img_array = np.expand_dims(img_array, axis=0)
+    img_array = np.expand_dims(img_array, axis=0).astype(np.float32)
     # Note: EfficientNetB0 has built-in preprocessing, so no manual rescaling here
 
     with st.spinner('Analyzing...'):
-        prediction = model.predict(img_array)[0][0]
+        result = infer(tf.constant(img_array))
+        prediction = list(result.values())[0].numpy()[0][0]
 
     st.subheader("Prediction")
     if prediction > 0.5:
