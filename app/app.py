@@ -8,7 +8,7 @@ st.set_page_config(page_title="Venomous Snake Identifier", page_icon="🐍")
 
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model('efficientnet_b0.h5')
+    model = tf.keras.models.load_model('efficientnet_b0.keras')	
     return model
 
 model = load_model()
