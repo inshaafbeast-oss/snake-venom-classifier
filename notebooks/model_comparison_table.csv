@@ -1,0 +1,4 @@
+Model,Accuracy,Precision,Recall,F1-Score
+Baseline CNN,0.55,0.55,0.55,0.54
+MobileNetV2,0.83,0.83,0.82,0.82
+EfficientNetB0,0.87,0.87,0.87,0.87
