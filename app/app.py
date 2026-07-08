@@ -3,12 +3,16 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
 from PIL import Image
+import os
 
 st.set_page_config(page_title="Venomous Snake Identifier", page_icon="🐍")
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, 'efficientnet_b0.keras')
+
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model('efficientnet_b0.keras')	
+    model = tf.keras.models.load_model(MODEL_PATH)
     return model
 
 model = load_model()
